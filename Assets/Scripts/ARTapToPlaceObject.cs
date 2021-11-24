@@ -5,8 +5,12 @@ using UnityEngine.XR.ARSubsystems;
 
 public class ARTapToPlaceObject : MonoBehaviour
 {
-    public GameObject objectToPlace;
+    public GameObject goalToPlace;
+    public GameObject ballToPlace;
     public GameObject placementIndicator;
+
+    private bool isGoalPlaced = false;
+    private bool isBallPlaced = false;
 
     private ARSessionOrigin arOrigin;
     private ARRaycastManager arRaycastManager;
@@ -33,7 +37,16 @@ public class ARTapToPlaceObject : MonoBehaviour
 
     private void PlaceObject()
     {
-        Instantiate(objectToPlace, placementPose.position, placementPose.rotation);
+        if (!isGoalPlaced)
+        {
+            placementPose.rotation.y = -180;
+            Instantiate(goalToPlace, placementPose.position, placementPose.rotation);
+            isGoalPlaced = true;
+        } else if (!isBallPlaced)
+        {
+            Instantiate(ballToPlace, placementPose.position, placementPose.rotation);
+            isBallPlaced = true;
+        }
     }
 
     private void UpdatePlacementIndicator()

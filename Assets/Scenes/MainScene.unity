@@ -289,7 +289,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c740ff90622ac6145a069e13a8f64a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectToPlace: {fileID: 919132149155446097, guid: 38685c28c5ef85246b00c0185a0e6026,
+  goalToPlace: {fileID: 919132149155446097, guid: 38685c28c5ef85246b00c0185a0e6026,
+    type: 3}
+  ballToPlace: {fileID: 919132149155446097, guid: 6df7806541f595b4eb19eaad5201c078,
     type: 3}
   placementIndicator: {fileID: 333609215}
 --- !u!1 &705507993
