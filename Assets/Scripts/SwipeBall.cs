@@ -5,6 +5,17 @@ using UnityEngine.XR.ARFoundation;
 
 public class SwipeBall : MonoBehaviour
 {
+    private Vector2 startTouch, swipeDelta;
+    private bool isDraging = false;
+    private bool tap = false;
+    private float deadzone = 200f; // minimal swipe length to consider user input as swipe
+
+    // public variables needed to control ball behaviour
+    public bool swiped = false; // true when swipe surpassed deadzone
+    public float swipeX = 0f; // if value > 0 swiped right else swiped left
+    public float swipeY = 0f; // if value > 0 swiped up else swiped down
+    public float swipeDistance = 0f; // length of swipe
+
     [SerializeField]
     ARRaycastManager m_RaycastManager;
     List<ARRaycastHit> m_Hits = new List<ARRaycastHit>();
@@ -35,6 +46,43 @@ public class SwipeBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        tap = false;
+
+        if (Input.touches.Length != 0)
+        {
+            if (Input.touches[0].phase == TouchPhase.Began)
+            {
+                tap = true;
+                isDraging = true;
+                startTouch = Input.touches[0].position;
+            }
+            else if (Input.touches[0].phase == TouchPhase.Ended || Input.touches[0].phase == TouchPhase.Canceled)
+            {
+                isDraging = false;
+                Reset();
+            }
+        }
+
+        swipeDelta = Vector2.zero;
+
+        if (isDraging)
+        {
+            if (Input.touches.Length > 0)
+            {
+                swipeDelta = Input.touches[0].position - startTouch;
+            }
+        }
+
+        if (swipeDelta.magnitude > deadzone)
+        {
+            swiped = true;
+            swipeX = swipeDelta.x;
+            swipeY = swipeDelta.y;
+            swipeDistance = swipeDelta.magnitude;
+
+            Reset();
+        }
+
         RaycastHit hit;
         Ray ray = arCam.ScreenPointToRay(Input.GetTouch(0).position);
         if(m_RaycastManager.Raycast(Input.GetTouch(0).position, m_Hits))
@@ -69,9 +117,13 @@ public class SwipeBall : MonoBehaviour
                     }
                 }
             }
-
-       
-
         }
+    }
+
+    private void Reset()
+    {
+        startTouch = Vector2.zero;
+        swipeDelta = Vector2.zero;
+        isDraging = false;
     }
 }

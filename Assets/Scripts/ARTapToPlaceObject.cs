@@ -7,10 +7,17 @@ public class ARTapToPlaceObject : MonoBehaviour
 {
     public GameObject goalToPlace;
     public GameObject ballToPlace;
+    public GameObject planeToPlace;
+    public GameObject goalLine;
     public GameObject placementIndicator;
+
+    public Vector3 ballPosition;
+    private Vector3 goalPosition;
+    private Vector3 planePosition;
 
     private bool isGoalPlaced = false;
     private bool isBallPlaced = false;
+    private bool isPlanePlaced = false;
 
     private ARSessionOrigin arOrigin;
     private ARRaycastManager arRaycastManager;
@@ -37,20 +44,55 @@ public class ARTapToPlaceObject : MonoBehaviour
 
     private void PlaceObject()
     {
-        if (!isGoalPlaced)
+        if (!isPlanePlaced)
         {
+            // save plane position to place goal and ball above it
+            planePosition = placementPose.position;
+            // set plane position
+            planeToPlace.transform.position = planePosition;
+            // mark plane as placed
+            isPlanePlaced = true;
+        }
+        else if (!isGoalPlaced)
+        {
+            // rotate goal
             placementPose.rotation.y = -180;
-            Instantiate(goalToPlace, placementPose.position, placementPose.rotation);
+            // place goal on the same level as plane
+            placementPose.position.y = planePosition.y;
+            // save goal position
+            goalPosition = placementPose.position;
+            // set goal rotation and position
+            goalToPlace.transform.rotation = placementPose.rotation;
+            goalToPlace.transform.position = goalPosition;
+            // mark goal as placed
             isGoalPlaced = true;
-        } else if (!isBallPlaced)
+            // add goal line
+            var goalLinePostion = goalPosition;
+            goalLinePostion.y += 0.25f;
+            goalLine.transform.position = goalLinePostion;
+        }
+        else if (!isBallPlaced)
         {
-            Instantiate(ballToPlace, placementPose.position, placementPose.rotation);
+            // set ball position above plane
+            placementPose.position.y = planePosition.y + 0.1f;
+            // save ball position
+            ballPosition = placementPose.position;
+            // set ball position
+            ballToPlace.transform.position = ballPosition;
+            // mark ball as placed
             isBallPlaced = true;
         }
     }
 
     private void UpdatePlacementIndicator()
     {
+        // hide placement indicator after placing objects
+        if (isPlanePlaced && isGoalPlaced && isBallPlaced)
+        {
+            placementIndicator.SetActive(false);
+            return;
+        }
+
         if (placementPoseIsValid)
         {
             placementIndicator.SetActive(true);
