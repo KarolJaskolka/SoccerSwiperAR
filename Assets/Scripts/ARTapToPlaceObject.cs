@@ -67,9 +67,9 @@ public class ARTapToPlaceObject : MonoBehaviour
             // mark goal as placed
             isGoalPlaced = true;
             // add goal line
-            var goalLinePostion = goalPosition;
-            goalLinePostion.y += 0.25f;
-            goalLine.transform.position = goalLinePostion;
+            // var goalLinePostion = goalPosition;
+            // goalLinePostion.y += 0.25f;
+            // goalLine.transform.position = goalLinePostion;
         }
         else if (!isBallPlaced)
         {
