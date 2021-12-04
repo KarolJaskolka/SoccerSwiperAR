@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class GoalLineTechnology : MonoBehaviour
 {
     public Text goalText;
+    public Text goalCounterText;
+    private int goalCounter = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        SetGoalCounterText();
     }
 
     // Update is called once per frame
@@ -24,12 +24,19 @@ public class GoalLineTechnology : MonoBehaviour
         if (other.tag == "Ball")
         {
             goalText.text = "GOAL";
-            Invoke("ClearGoalText", 2f);
+            goalCounter = goalCounter + 1;
+            SetGoalCounterText();
+            Invoke("ClearGoalText", 1f);
         }
     }
 
     void ClearGoalText()
     {
         goalText.text = "";
+    }
+
+    void SetGoalCounterText()
+    {
+        goalCounterText.text = "GOALS: " + goalCounter;
     }
 }
